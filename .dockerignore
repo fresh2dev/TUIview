@@ -1,0 +1,17 @@
+**/.git
+
+**/secrets
+!**/*.keep
+**/*.tmp
+**/.vscode
+**/.DS_store
+/build
+**/.ipynb_checkpoints
+**/.coverage
+**/.hypothesis
+**/.tox
+**/.idea
+**/*.egg-info
+**/.mypy_cache
+**/__pycache__
+**/.pytest_cache
