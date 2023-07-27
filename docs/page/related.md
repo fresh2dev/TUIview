@@ -12,6 +12,6 @@ argparse-tui is a fork of Trogon.
 
 Textual is the Python TUI framework that powers Trogon and argparse-tui.
 
-## [Yapx](https://www.f2dv.com/code/r/yapx/i/)
+## [Yapx](https://www.f2dv.com/r/yapx)
 
 Yapx is a CLI library built on top of argparse which makes it easy to build argparse CLIs using Python type-hints. The command-line interface of this project is built using yapx.
