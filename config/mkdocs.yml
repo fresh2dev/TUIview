@@ -1,6 +1,6 @@
 site_name: "tuiview"
 site_description: "tuiview Docs"
-site_url: !ENV [MKDOCS_SITE_URL, "https://www.f2dv.com/code/r/tuiview/i"]
+site_url: !ENV [MKDOCS_SITE_URL, "https://www.f2dv.com/r/tuiview"]
 repo_url: "https://www.github.com/fresh2dev/tuiview"
 repo_name: "fresh2dev/tuiview"
 edit_uri: "edit/main/docs"
@@ -25,8 +25,8 @@ nav:
   - License: license.md
   - Discussion: comments.md
   - '<- f2dv.com':
-    - '/blog': 'https://www.f2dv.com'
-    - '/code': 'https://www.f2dv.com/code/r/'
+    - '/home': 'https://www.f2dv.com'
+    - '/code': 'https://www.f2dv.com/projects'
     - '/fund': 'https://www.f2dv.com/fund'
 
 watch:

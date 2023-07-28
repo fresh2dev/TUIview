@@ -1,26 +1,25 @@
 # TUIview [`tv`]
 
-> A TUI for every CLI
+> A TUI for every CLI.
 
-| Links         |                        |
-|---------------|------------------------|
-| Code Repo     | https://www.github.com/fresh2dev/tuiview           |
-| Mirror Repo   | https://www.f2dv.com/code/r/tuiview        |
-| Documentation | https://www.f2dv.com/code/r/tuiview/i           |
-| Changelog     | https://www.f2dv.com/code/r/tuiview/i/changelog |
-| License       | https://www.f2dv.com/code/r/tuiview/i/license   |
-| Funding       | https://www.f2dv.com/fund        |
+| Links         |                                          |
+|---------------|------------------------------------------|
+| Code Repo     | https://www.github.com/fresh2dev/tuiview |
+| Mirror Repo   | https://www.f2dv.com/r/tuiview           |
+| Documentation | https://www.f2dv.com/r/tuiview           |
+| Changelog     | https://www.f2dv.com/r/tuiview/changelog |
+| License       | https://www.f2dv.com/r/tuiview/license   |
+| Funding       | https://www.f2dv.com/fund                |
 
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/releases)
-[![GitHub Release Date](https://img.shields.io/github/release-date/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/releases)
-[![License](https://img.shields.io/github/license/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/code/r/tuiview/i/license)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/changelog)
+[![GitHub Release Date](https://img.shields.io/github/release-date/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/changelog)
+[![License](https://img.shields.io/github/license/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/license)
+[![GitHub Repo stars](https://img.shields.io/github/stars/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://star-history.com/#fresh2dev/tuiview&Date)
 [![GitHub issues](https://img.shields.io/github/issues-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/pulls)
-[![GitHub Repo stars](https://img.shields.io/github/stars/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://star-history.com/#fresh2dev/tuiview&Date)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/tuiview?color=blue&style=for-the-badge)](https://pypi.org/project/tuiview)
 [![Docker Pulls](https://img.shields.io/docker/pulls/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://hub.docker.com/r/fresh2dev/tuiview)
-[![Docs Website](https://img.shields.io/website?down_message=unavailable&label=docs&style=for-the-badge&up_color=blue&up_message=available&url=https://www.f2dv.com/code/r/tuiview/i)](https://www.f2dv.com/code/r/tuiview/i)
-[![Coverage Website](https://img.shields.io/website?down_message=unavailable&label=coverage&style=for-the-badge&up_color=blue&up_message=available&url=https://www.f2dv.com/code/r/tuiview/i/tests/coverage)](https://www.f2dv.com/code/r/tuiview/i/tests/coverage)
+[![Changelog](https://img.shields.io/website?down_message=unavailable&label=docs&style=for-the-badge&up_color=blue&up_message=available&url=https://www.f2dv.com/r/tuiview/changelog)](https://www.f2dv.com/r/tuiview/changelog)
 [![Funding](https://img.shields.io/badge/funding-%24%24%24-blue?style=for-the-badge)](https://www.f2dv.com/fund)
 
 ---

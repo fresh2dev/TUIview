@@ -1,7 +1,7 @@
 ARG HB_IMAGE_REGISTRY=docker.io
 FROM ${HB_IMAGE_REGISTRY}/python:3.10.10-slim-bullseye as build
 LABEL org.opencontainers.image.source=https://www.github.com/fresh2dev/tuiview
-LABEL org.opencontainers.image.description="A TUI for every CLI"
+LABEL org.opencontainers.image.description="A TUI for every CLI."
 LABEL org.opencontainers.image.licenses=GPLv3
 RUN apt-get update && apt-get install --upgrade -y build-essential git
 WORKDIR /app

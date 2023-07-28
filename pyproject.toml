@@ -7,7 +7,7 @@ name = "tuiview"
 authors = [
     {name = "Donald Mellenbruch", email = "hello@f2dv.com"},
 ]
-description = "A TUI for every CLI"
+description = "A TUI for every CLI."
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.8"
@@ -17,7 +17,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "typing-extensions; python_version<'3.10'",
-    "yapx[tui]>=0.2.1,<1",
+    "yapx[tui]>=0.2.2,<1",
 ]
 
 [project.optional-dependencies]
@@ -57,7 +57,7 @@ tests = [
 ]
 
 [project.urls]
-Homepage = "https://www.f2dv.com/code/r/tuiview/i"
+Homepage = "https://www.f2dv.com/r/tuiview"
 Repository = "https://www.github.com/fresh2dev/tuiview"
 Funding = "https://www.f2dv.com/fund"
 
