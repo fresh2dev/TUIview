@@ -50,22 +50,19 @@ ________________________________________________________________________________
 $ tv
 ________________________________________________________________________________
 
-Helpful Parameters:
-  -h, --help            Show this help message.
-  --help-all            Show help for all commands.
-  --version             Show the program version number.
-  --print-shell-completion {bash,zsh,tcsh}
-                        Print shell completion script.
+helpful parameters:
+  -h, --help  Show this help message.
+  --tui       Show Textual User Interface (TUI).
+  --help-all  Show help for all commands.
+  --version   Show the program version number.
 
-Optional Parameters:
-  -f, --from-file <value>
-                        > Type: Path, Default: None
-
-Commands:
+commands:
   <COMMAND>
-    git
+    from-file
     rsync
     grep
+    pastel
+    git
 ```
 
 ### Built-in Tools
@@ -86,6 +83,12 @@ Notice how `git` has subcommands (`commit`, `merge`, ...). The TUI can be limite
 
 ```
 tv git commit
+```
+
+Any other arguments are parsed and passed-through to the TUI:
+
+```
+tv git commit -m 'hello' -m 'world'
 ```
 
 ### Load from File
@@ -110,13 +113,11 @@ parser.add_argument(
 
 > Hint: see this, and `ping.py` in the `examples/` folder
 
-Now display the TUI using: `tv -f echo.py`
-
-## Contribute
-
-If you think this is as cool as I do and want to contribute and help curate files of argparse parsers for various CLI tools, rock on :metal:
+Now display the TUI using: `tv from-file echo.py`
 
 ## Support
+
+If you think this is as cool as I do and want to contribute and help curate files of argparse parsers for various CLI tools, rock on :metal:
 
 If this project delivers value to you, please [provide feedback](https://www.github.com/fresh2dev/tuiview/issues), code contributions, and/or [funding](https://www.f2dv.com/fund).
 

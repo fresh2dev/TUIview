@@ -1,8 +1,5 @@
-from typing import Optional
-
 import yapx
 from argparse_tui import invoke_tui
-from yapx.types import Annotated
 
 
 def pastel_color(parser):
@@ -444,7 +441,7 @@ def pastel_textcolor(parser):
     )
 
 
-def main(cmd: Annotated[Optional[str], yapx.arg(None, pos=True)]):
+def main(*args):
     parser = yapx.ArgumentParser(prog="pastel")
 
     subparsers = parser.add_subparsers()
@@ -470,4 +467,4 @@ def main(cmd: Annotated[Optional[str], yapx.arg(None, pos=True)]):
     pastel_to_gray(subparsers.add_parser("to-gray"))
     pastel_textcolor(subparsers.add_parser("textcolor"))
 
-    invoke_tui(parser, command_filter=cmd)
+    invoke_tui(parser, cli_args=args)
