@@ -112,5 +112,5 @@ def rsync() -> yapx.ArgumentParser:
     return parser
 
 
-def main():
-    invoke_tui(rsync())
+def main(*args):
+    invoke_tui(rsync(), cli_args=args)

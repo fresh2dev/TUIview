@@ -127,5 +127,5 @@ def grep() -> yapx.ArgumentParser:
     return parser
 
 
-def main():
-    invoke_tui(grep())
+def main(*args):
+    invoke_tui(grep(), cli_args=args)

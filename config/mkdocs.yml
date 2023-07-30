@@ -1,5 +1,5 @@
-site_name: "tuiview"
-site_description: "tuiview Docs"
+site_name: "TUIview"
+site_description: "TUIview Docs"
 site_url: !ENV [MKDOCS_SITE_URL, "https://www.f2dv.com/r/tuiview"]
 repo_url: "https://www.github.com/fresh2dev/tuiview"
 repo_name: "fresh2dev/tuiview"
@@ -39,12 +39,12 @@ theme:
   palette:
     # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#primary-color
     - scheme: slate
-      primary: deep purple
+      primary: lime
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to light mode
     - scheme: default
-      primary: deep purple
+      primary: lime
       toggle:
         icon: material/toggle-switch
         name: Switch to dark mode

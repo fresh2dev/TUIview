@@ -1,9 +1,7 @@
 import argparse
-from typing import Optional
 
 import yapx
 from argparse_tui import invoke_tui
-from yapx.types import Annotated
 
 
 def git_commit(parser):
@@ -351,7 +349,7 @@ def git_log(parser):
     parser.add_argument("path", nargs=argparse.REMAINDER)
 
 
-def main(cmd: Annotated[Optional[str], yapx.arg(None, pos=True)]):
+def main(*args):
     parser = yapx.ArgumentParser(prog="git")
 
     subparsers = parser.add_subparsers()
@@ -360,4 +358,4 @@ def main(cmd: Annotated[Optional[str], yapx.arg(None, pos=True)]):
     git_log(subparsers.add_parser("log"))
     git_merge(subparsers.add_parser("merge"))
 
-    invoke_tui(parser, command_filter=cmd)
+    invoke_tui(parser, cli_args=args)

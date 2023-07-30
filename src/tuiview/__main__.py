@@ -1,7 +1,7 @@
 import sys
 from importlib import import_module
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict
 
 import yapx
 from argparse_tui import invoke_tui
@@ -10,16 +10,13 @@ from yapx.types import Annotated
 from .__version__ import __version__
 
 
-def setup(
-    from_file: Annotated[Optional[Path], yapx.arg(None, flags=["-f", "--from-file"])],
-):
-    if from_file:
-        sys.path.append(str(from_file.parent))
-        module = import_module(from_file.stem)
+def from_file(*args, path: Annotated[Path, yapx.arg(pos=True)]):
+    sys.path.append(str(path.parent))
+    module = import_module(path.stem)
 
-        invoke_tui(module.parser)
+    invoke_tui(module.parser, cli_args=args)
 
-        sys.exit(0)
+    sys.exit(0)
 
 
 def main() -> None:
@@ -33,8 +30,8 @@ def main() -> None:
             )
             named_subcommands[x.stem.replace("_", "-")] = cmd_module.main
 
-    yapx.run(
-        setup,
+    yapx.run_commands(
+        [from_file],
         named_subcommands=named_subcommands,
         prog_version=__version__,
         default_args=["--help"],
