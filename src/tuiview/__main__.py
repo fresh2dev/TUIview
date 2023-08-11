@@ -1,58 +1,337 @@
+import argparse
 import os
+import subprocess as sp
 import sys
-from argparse import ArgumentParser
+from contextlib import contextmanager
 from importlib import import_module
 from pathlib import Path
-from typing import Any, Callable, Dict, List
+from shutil import copy, which
+from types import ModuleType
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import yapx
 from argparse_tui import invoke_tui
+from yapx.types import Annotated
 
 from .__version__ import __version__
 
+TV_MODULES: Dict[str, ModuleType] = {}
+TV_MODULE_DIR: Path = (
+    Path(os.environ["TV_MODULE_DIR"])
+    if os.getenv("TV_MODULE_DIR", None)
+    else Path.home() / ".tuiview"
+)
+TV_MODULE_DIR_INTERNAL: Path = Path(__file__).parent / "cmd"
 
-def invoke_tui_from_file(path: Path, *args):
-    if not path.exists():
-        raise FileNotFoundError(path)
-    sys.path.append(str(path.parent))
-    module = import_module(path.stem)
-    candidate_attrs: List[str] = ["parser", "tui", "form", "cli", "app"]
-    parser_attr: str = candidate_attrs[0]
+
+@contextmanager
+def append_to_sys_path(path: Union[str, Path]):
+    original_path = sys.path.copy()
+    sys.path.append(str(path))
+
+    try:
+        yield
+    finally:
+        sys.path = original_path
+
+
+def get_parser_from_module(module: ModuleType) -> argparse.ArgumentParser:
+    parser_attr: str = "program"
+    candidate_attrs: List[str] = [
+        parser_attr,
+        "parser",
+        "tui",
+        "cli",
+        "form",
+        "app",
+        "prog",
+        "prg",
+    ]
+    candidate_attrs.extend(x.upper() for x in candidate_attrs.copy())
+
     for attr in candidate_attrs:
         if hasattr(module, attr):
             parser_attr = attr
             break
 
-    parser: ArgumentParser = getattr(module, parser_attr)
-    if not isinstance(parser, ArgumentParser):
+    try:
+        parser: argparse.ArgumentParser = getattr(module, parser_attr)
+    except AttributeError as e:
+        err: str = (
+            f"None of these attributes found in module:\n{', '.join(candidate_attrs)}"
+        )
+        raise AttributeError(err) from e
+
+    if not isinstance(parser, argparse.ArgumentParser):
         err: str = f"The value of '{parser_attr}' is not an argparse.ArgumentParser"
         raise TypeError(err)
 
-    invoke_tui(module.parser, cli_args=args)
+    return parser
+
+
+def import_modules_from_package(name: Optional[str] = None) -> Dict[str, ModuleType]:
+    return {
+        prog_name: import_module(f".{x.parent.stem}.{x.stem}", package=__package__)
+        for x in sorted(TV_MODULE_DIR_INTERNAL.glob("*.py"))
+        if not x.name.startswith("_")
+        for prog_name in [to_prog_name(x.stem)]
+        if name is None or prog_name == name
+    }
+
+
+def import_module_from_file(path: Path) -> ModuleType:
+    with append_to_sys_path(path.parent):
+        return import_module(path.stem)
+
+
+def import_modules_from_path(
+    path: Path,
+    name: Optional[str] = None,
+) -> Dict[str, ModuleType]:
+    return {
+        prog_name: import_module_from_file(x)
+        for x in sorted(path.glob("*.py"))
+        for prog_name in [to_prog_name(x.stem)]
+        if name is None or prog_name == name
+    }
+
+
+def invoke_tui_from_module(module: ModuleType, *args: str):
+    parser = get_parser_from_module(module)
+    invoke_tui(parser, cli_args=args)
+
+
+def invoke_tui_from_file(path: Union[str, Path], *args: str):
+    if isinstance(path, str):
+        path = Path(path)
+    module = import_module_from_file(Path(sys.argv[1]))
+    parser = get_parser_from_module(module)
+    invoke_tui(parser, cli_args=args)
+
+
+def to_prog_name(text: str) -> str:
+    return text.split(".")[-1].strip(" _").replace("_", "-").replace(" ", "-")
+
+
+def is_builtin_module(module: ModuleType) -> bool:
+    return module.__name__.split(".", 1)[0] == __package__
+
+
+def is_prog_available(name: str) -> bool:
+    if which(name):
+        return True
+
+    interactive_shell_cmd: List[str] = []
+
+    while True:
+        try:
+            sp.run(
+                [*interactive_shell_cmd, f"type {name}"],
+                shell=not interactive_shell_cmd,
+                stdout=sp.DEVNULL,
+                check=True,
+            )
+            return True
+        except sp.CalledProcessError:
+            if interactive_shell_cmd or not os.getenv("SHELL"):
+                return False
+
+            # When searching for the command,
+            # use an interactive shell as the fallback option.
+            interactive_shell_cmd = [os.environ["SHELL"], "-i", "-c"]
+        else:
+            return True
+
+
+def import_program(path: Path, force: bool) -> Path:
+    TV_MODULE_DIR.mkdir(exist_ok=True)
+    tgt_file: Path = TV_MODULE_DIR / path.name
+    if not force and tgt_file.exists():
+        raise FileExistsError(tgt_file)
+    copy(path, tgt_file)
+    return tgt_file
+
+
+class EditProgramAction(argparse.Action):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: Any,
+        option_string: Optional[str] = None,
+    ):
+        prog_path: Path = TV_MODULE_DIR
+
+        prog_name: Optional[str] = values
+        module: Union[None, ModuleType, List[ModuleType]] = None
+
+        if prog_name:
+            module = [
+                module for name, module in TV_MODULES.items() if name == prog_name
+            ]
+
+            if not module:
+                err: str = f"Program not found: {prog_name}"
+                raise ValueError(err)
+
+            assert isinstance(module, list)
+            module = module[0]
+
+            if not module.__file__:
+                err: str = f"No file found for module: {module.__name__}"
+                raise ValueError(err)
+
+            if is_builtin_module(module):
+                prog_path = import_program(
+                    Path(module.__file__),
+                    force=False,
+                )
+            else:
+                prog_path = Path(module.__file__)
+
+        editor: str = os.getenv("EDITOR", "vim")
+        sp.run([editor, prog_path], check=False)
+
+
+def setup(
+    list_modules: Annotated[
+        bool,
+        yapx.arg(default=False, flags=["-l", "--list"], help="List all programs."),
+    ],
+    _edit_program: Annotated[
+        Optional[str],
+        yapx.arg(
+            default=None,
+            flags=["-e", "--edit"],
+            metavar="<program>",
+            nargs="?",
+            action=EditProgramAction,
+            help="Open a program file for editing.",
+        ),
+    ],
+    import_program_file: Annotated[
+        Optional[Path],
+        yapx.arg(
+            default=None,
+            flags=["-i", "--import"],
+            metavar="<file>",
+            help="Import a program to make it globally available in TUIview.",
+        ),
+    ],
+    import_force: Annotated[
+        Optional[bool],
+        yapx.arg(
+            default=False,
+            flags=["-f", "--force"],
+            help="On import, overwrite any existing program file.",
+        ),
+    ],
+) -> None:
+    if list_modules:
+        print()
+        print("------------")
+        print("- PROVIDED -")
+        print("------------")
+        any_imported: bool = False
+        any_missing: bool = False
+        for name, module in TV_MODULES.items():
+            if not is_prog_available(name):
+                name += " *"
+                any_missing = True
+
+            if is_builtin_module(module):
+                print(name)
+            else:
+                if not any_imported:
+                    print()
+                    print("------------")
+                    print("- IMPORTED -")
+                    print("------------")
+                    any_imported = True
+                print(name)
+
+        if any_missing:
+            print("\n* = command not found")
+
+    if import_program_file is not None:
+        program_copy: Path = import_program(
+            import_program_file,
+            force=bool(import_force),
+        )
+        print(f"Successfully imported to: {program_copy}")
 
 
 def main() -> None:
-    named_subcommands: Dict[str, Callable[..., Any]] = {}
+    first_arg: Optional[str] = (
+        sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else None
+    )
 
-    for x in (Path(__file__).parent / "cmd").glob("*.py"):
-        if not x.name.startswith("_"):
-            cmd_module = import_module(
-                f".{x.parent.stem}.{x.stem}",
-                package=__package__,
-            )
-            named_subcommands[x.stem.replace("_", "-")] = cmd_module.main
-
-    if sys.argv and ("." in sys.argv[1] or os.sep in sys.argv[1]):
+    if first_arg and first_arg.endswith(".py"):
         try:
-            invoke_tui_from_file(Path(sys.argv[1]), *sys.argv[2:])
+            path: Path = Path(first_arg)
+            extra_args: List[str] = sys.argv[2:]
+            invoke_tui_from_file(path, *extra_args)
         except FileNotFoundError as e:
             print("File not found:", e)
         except (AttributeError, TypeError) as e:
             print(e)
-    else:
-        yapx.run_commands(
+
+        return
+
+    prog_filter: Optional[str] = first_arg
+    while not TV_MODULES:
+        TV_MODULES.update(import_modules_from_package(name=prog_filter))
+
+        if TV_MODULE_DIR.exists():
+            for k, v in import_modules_from_path(TV_MODULE_DIR, name=first_arg).items():
+                # delete, then re-add to maintain order.
+                if k in TV_MODULES:
+                    del TV_MODULES[k]
+                TV_MODULES[k] = v
+
+        # if there is a filter and no modules are found,
+        # remove the filter and loop again to retrieve all modules.
+
+        if prog_filter is None:
+            break
+        prog_filter = None
+
+    named_subcommands: Dict[str, Callable[..., Any]] = {}
+    for prog_name, module in TV_MODULES.items():
+
+        def _invoke_tui_from_this_module(*args: str, _module=module):
+            invoke_tui_from_module(_module, *args)
+
+        _this_parser: argparse.ArgumentParser = get_parser_from_module(module)
+
+        argparse_default_prog: str = Path(sys.argv[0]).stem
+        if not _this_parser.prog or _this_parser.prog == argparse_default_prog:
+            _this_parser.prog = prog_name
+        elif _this_parser.prog != prog_name:
+            err: str = f"The base name of the file should be equal to the name of the program: {prog_name} != {_this_parser.prog}"
+            raise ValueError(err)
+        elif is_prog_available(prog_name):
+            cmd_help: Optional[str] = (
+                _this_parser.description if _this_parser.description else module.__doc__
+            )
+
+            if cmd_help:
+                _invoke_tui_from_this_module.__doc__ = cmd_help
+
+            named_subcommands[_this_parser.prog] = _invoke_tui_from_this_module
+
+    cli_args: List[str] = (
+        sys.argv[1:] if not first_arg else [first_arg, "--", sys.argv[2:]]
+    )
+
+    try:
+        yapx.run(
+            setup,
             named_subcommands=named_subcommands,
             prog_version=__version__,
-            default_args=["--help"],
+            args=cli_args,
             tui_flags=[],
+            default_args=["--help"],
         )
+    except FileExistsError as e:
+        print("File already exists:", e)
