@@ -7,7 +7,7 @@ from importlib import import_module
 from pathlib import Path
 from shutil import copy, which
 from types import ModuleType
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import yapx
 from argparse_tui import invoke_tui
@@ -196,13 +196,14 @@ class EditProgramAction(argparse.Action):
 def setup(
     list_modules: Annotated[
         bool,
-        yapx.arg(default=False, flags=["-l", "--list"], help="List all programs."),
+        yapx.arg("l", "list", default=False, help="List all programs."),
     ],
     _edit_program: Annotated[
         Optional[str],
         yapx.arg(
+            "e",
+            "edit",
             default=None,
-            flags=["-e", "--edit"],
             metavar="<program>",
             nargs="?",
             action=EditProgramAction,
@@ -212,8 +213,9 @@ def setup(
     import_program_file: Annotated[
         Optional[Path],
         yapx.arg(
+            "i",
+            "import",
             default=None,
-            flags=["-i", "--import"],
             metavar="<file>",
             help="Import a program to make it globally available in TUIview.",
         ),
@@ -221,8 +223,9 @@ def setup(
     import_force: Annotated[
         Optional[bool],
         yapx.arg(
+            "f",
+            "force",
             default=False,
-            flags=["-f", "--force"],
             help="On import, overwrite any existing program file.",
         ),
     ],
@@ -296,7 +299,7 @@ def main() -> None:
             break
         prog_filter = None
 
-    named_subcommands: Dict[str, Callable[..., Any]] = {}
+    subcommands: List[yapx.Command] = []
     for prog_name, module in TV_MODULES.items():
 
         def _invoke_tui_from_this_module(*args: str, _module=module):
@@ -307,7 +310,7 @@ def main() -> None:
         argparse_default_prog: str = Path(sys.argv[0]).stem
         if not _this_parser.prog or _this_parser.prog == argparse_default_prog:
             _this_parser.prog = prog_name
-        elif _this_parser.prog != prog_name:
+        elif _this_parser.prog.lower() != prog_name:
             err: str = f"The base name of the file should be equal to the name of the program: {prog_name} != {_this_parser.prog}"
             raise ValueError(err)
         elif is_prog_available(prog_name):
@@ -318,18 +321,22 @@ def main() -> None:
             if cmd_help:
                 _invoke_tui_from_this_module.__doc__ = cmd_help
 
-            named_subcommands[_this_parser.prog] = _invoke_tui_from_this_module
-
-    cli_args: List[str] = (
-        sys.argv[1:] if not first_arg else [first_arg, "--", sys.argv[2:]]
-    )
+            subcommands.append(
+                yapx.cmd(
+                    _invoke_tui_from_this_module,
+                    name=_this_parser.prog,
+                    add_help=False,
+                ),
+            )
 
     try:
         yapx.run(
             setup,
-            named_subcommands=named_subcommands,
+            subcommands,
             prog_version=__version__,
-            args=cli_args,
+            args=sys.argv[1:],
+            add_help=True,
+            add_help_all=False,
             tui_flags=[],
             default_args=["--help"],
         )
