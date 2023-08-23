@@ -3,6 +3,7 @@ import yapx
 parser = yapx.ArgumentParser(
     prog="rsync",
     description="rsync is a file transfer program capable of efficient remote update via a fast differencing algorithm.",
+    add_help=False,
 )
 
 # Add the options to the parser

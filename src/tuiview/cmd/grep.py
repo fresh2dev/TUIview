@@ -3,6 +3,7 @@ import yapx
 parser = yapx.ArgumentParser(
     prog="grep",
     description="Search for PATTERNS in each FILE.",
+    add_help=False,
 )
 
 # Usage information

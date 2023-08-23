@@ -346,7 +346,11 @@ def git_log(subparser):
     subparser.add_argument("path", nargs="...")
 
 
-parser = yapx.ArgumentParser(prog="git")
+parser = yapx.ArgumentParser(
+    prog="git",
+    description="A free and open source distributed version control system",
+    add_help=False,
+)
 
 subparsers = parser.add_subparsers()
 

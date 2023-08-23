@@ -1,6 +1,6 @@
 import argparse
 
-parser = argparse.ArgumentParser(prog="echo")
+parser = argparse.ArgumentParser(prog="echo", description="Print text", add_help=False)
 
 parser.add_argument("STRING", nargs="*")
 

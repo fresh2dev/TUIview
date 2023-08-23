@@ -440,7 +440,11 @@ def pastel_textcolor(subparser):
     )
 
 
-parser = yapx.ArgumentParser(prog="pastel")
+parser = yapx.ArgumentParser(
+    prog="pastel",
+    description="A command-line tool to generate, analyze, convert and manipulate colors",
+    add_help=False,
+)
 
 subparsers = parser.add_subparsers()
 
