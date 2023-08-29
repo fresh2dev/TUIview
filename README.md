@@ -9,6 +9,10 @@
 - <a href="https://www.f2dv.com/s/tuiview" target="_blank">*View the Slides*</a>
 - <a href="https://www.f2dv.com/r/tuiview" target="_blank">*Read the Docs*</a>
 
+<video autoplay="false" controls="controls">
+  <source src="https://img.fresh2.dev/tv_demo.webm" type="video/webm"/>
+</video>
+
 ---
 
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/fresh2dev/tuiview?filter=!*%5Ba-z%5D*&style=for-the-badge&label=Release&color=blue)](https://www.f2dv.com/r/tuiview/changelog)
@@ -67,6 +71,7 @@ Integrated CLI tools:
 - :white_circle: duf
 - :white_circle: dust
 - :white_circle: entr
+- :white_circle: ffmpeg
 - :white_circle: gh
 - :white_circle: git-cliff
 - :white_circle: grex
@@ -95,6 +100,13 @@ Integrated CLI tools:
 - :white_circle: vimdiff
 - :white_circle: wget
 - :white_circle: zoxide
+
+TUIview is simply a program for running and managing these *TV Program* files; Python Argparse implementations of various CLI tools.
+
+The real work -- the real value -- is in the quantity *and* quality of the program files. If you want to help make TUIview better by contributing and correcting TV Programs, please send PRs!
+
+> Pro tip: Given a the help text output from your CLI app of choice, ChatGPT is decent at providing an Argparse implementation of it.
+
 ---
 
 *Brought to you by...*
