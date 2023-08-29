@@ -1,125 +1,113 @@
 # TUIview [`tv`]
 
-> A TUI for every CLI.
-
-| Links         |                                          |
-|---------------|------------------------------------------|
-| Code Repo     | https://www.github.com/fresh2dev/tuiview |
-| Mirror Repo   | https://www.f2dv.com/r/tuiview           |
-| Documentation | https://www.f2dv.com/r/tuiview           |
-| Changelog     | https://www.f2dv.com/r/tuiview/changelog |
-| License       | https://www.f2dv.com/r/tuiview/license   |
-| Funding       | https://www.f2dv.com/fund                |
-
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/changelog)
-[![GitHub Release Date](https://img.shields.io/github/release-date/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/changelog)
-[![License](https://img.shields.io/github/license/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/license)
-[![GitHub Repo stars](https://img.shields.io/github/stars/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://star-history.com/#fresh2dev/tuiview&Date)
-[![GitHub issues](https://img.shields.io/github/issues-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/pulls)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/tuiview?color=blue&style=for-the-badge)](https://pypi.org/project/tuiview)
-[![Docker Pulls](https://img.shields.io/docker/pulls/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://hub.docker.com/r/fresh2dev/tuiview)
-[![Changelog](https://img.shields.io/website?down_message=unavailable&label=docs&style=for-the-badge&up_color=blue&up_message=available&url=https://www.f2dv.com/r/tuiview/changelog)](https://www.f2dv.com/r/tuiview/changelog)
-[![Funding](https://img.shields.io/badge/funding-%24%24%24-blue?style=for-the-badge)](https://www.f2dv.com/fund)
+> A TUI for every CLI
 
 ---
 
-## Overview
+<iframe src="https://www.f2dv.com/s/tuiview" frameborder="0" scrolling="no" style="height: 400px; width: 100%; border: none;"></iframe>
 
-`argparse-tui` is a Python library that will display a Textual UI (TUI) given a Python argparse ArgumentParser. With it, Argparse becomes the specification language for your TUI, powered by the [Textualize]() TUI framework.
+- <a href="https://www.f2dv.com/s/tuiview" target="_blank">*View the Slides*</a>
+- <a href="https://www.f2dv.com/r/tuiview" target="_blank">*Read the Docs*</a>
 
-TUIview is a command-line tool that contains a collection of "equivalent-enough" (and untested) Argparse implementations of common CLI tools.
+<video autoplay="false" controls="controls">
+  <source src="https://img.fresh2.dev/tv_demo.webm" type="video/webm"/>
+</video>
 
-Turns out, ChatGPT is decent at translating structured help text into a Python argparse ArgumentParser. This project does not use an AI, but what I've done so far is use GPT 3.5 to generate "equivalent-enough" Argparse implementations of `git`, `rsync`, and `grep`. I plan to clean these up some and add more for other great CLI tools like `fd` and `rg`.
+---
 
-## Install
+[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/fresh2dev/tuiview?filter=!*%5Ba-z%5D*&style=for-the-badge&label=Release&color=blue)](https://www.f2dv.com/r/tuiview/changelog)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/fresh2dev/tuiview/main?style=for-the-badge&label=updated&color=blue)](https://www.f2dv.com/r/tuiview/changelog)
+[![GitHub Repo stars](https://img.shields.io/github/stars/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://star-history.com/#fresh2dev/tuiview&Date)
+[![License](https://img.shields.io/github/license/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/license)
+<!-- [![GitHub issues](https://img.shields.io/github/issues-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/issues) -->
+<!-- [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/pulls) -->
+<!-- [![PyPI - Downloads](https://img.shields.io/pypi/dm/tuiview?color=blue&style=for-the-badge)](https://pypi.org/project/tuiview) -->
+<!-- [![Docker Pulls](https://img.shields.io/docker/pulls/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://hub.docker.com/r/fresh2dev/tuiview) -->
+<!-- [![Funding](https://img.shields.io/badge/funding-%24%24%24-blue?style=for-the-badge)](https://www.f2dv.com/fund) -->
 
-Install using `pipx` (or `pip`):
+---
 
-```
-pipx install tuiview
-```
+Integrated CLI tools:
 
-## Use
+> Legend:
+:green_circle: = Verified
+:yellow_circle: = Unverified
+:white_circle: = ToDo
 
-Installing TUIview gives you both `tuiview` and `tv` for short.
 
-```
-________________________________________________________________________________
+- :green_circle: pastel
 
-$ tv
-________________________________________________________________________________
+- :yellow_circle: alacritty
+- :yellow_circle: cloc
+- :yellow_circle: delta
+- :yellow_circle: df
+- :yellow_circle: diff
+- :yellow_circle: du
+- :yellow_circle: fd
+- :yellow_circle: figlet
+- :yellow_circle: git
+- :yellow_circle: gping
+- :yellow_circle: grep
+- :yellow_circle: jq
+- :yellow_circle: mods
+- :yellow_circle: pandoc
+- :yellow_circle: ping
+- :yellow_circle: rsync
+- :yellow_circle: scc
+- :yellow_circle: tree
+- :yellow_circle: unzip
+- :yellow_circle: watch
 
-helpful parameters:
-  -h, --help  Show this help message.
-  --tui       Show Textual User Interface (TUI).
-  --help-all  Show help for all commands.
-  --version   Show the program version number.
 
-commands:
-  <COMMAND>
-    from-file
-    rsync
-    grep
-    pastel
-    git
-```
+- :white_circle: ansible
+- :white_circle: asciinema
+- :white_circle: bandwhich
+- :white_circle: conda
+- :white_circle: curl
+- :white_circle: curlie
+- :white_circle: dig
+- :white_circle: docker
+- :white_circle: dog
+- :white_circle: duf
+- :white_circle: dust
+- :white_circle: entr
+- :white_circle: ffmpeg
+- :white_circle: gh
+- :white_circle: git-cliff
+- :white_circle: grex
+- :white_circle: gum
+- :white_circle: httpie
+- :white_circle: hugo
+- :white_circle: hyperfine
+- :white_circle: jupyter
+- :white_circle: kubectl
+- :white_circle: marp
+- :white_circle: mkdocs
+- :white_circle: ntfy
+- :white_circle: ouch
+- :white_circle: pip
+- :white_circle: pipx
+- :white_circle: procs
+- :white_circle: pyenv
+- :white_circle: pylint
+- :white_circle: pytest
+- :white_circle: ripgrep
+- :white_circle: sd
+- :white_circle: ser (servicer)
+- :white_circle: tar
+- :white_circle: tox
+- :white_circle: tre
+- :white_circle: vimdiff
+- :white_circle: wget
+- :white_circle: zoxide
 
-### Built-in Tools
+TUIview is simply a program for running and managing these *TV Program* files; Python Argparse implementations of various CLI tools.
 
-Launch the TUI of a known tool by providing its name:
+The real work -- the real value -- is in the quantity *and* quality of the program files. If you want to help make TUIview better by contributing and correcting TV Programs, please send PRs!
 
-```
-tv git
-```
+> Pro tip: Given a the help text output from your CLI app of choice, ChatGPT is decent at providing an Argparse implementation of it.
 
-```
-tv rsync
-```
-
-...
-
-Notice how `git` has subcommands (`commit`, `merge`, ...). The TUI can be limited to a specific command by giving its name:
-
-```
-tv git commit
-```
-
-Any other arguments are parsed and passed-through to the TUI:
-
-```
-tv git commit -m 'hello' -m 'world'
-```
-
-### Load from File
-
-Recall that argparse-tui allows us to use argparse as a specification language for Textual UIs. So, given a file defining and populating an argparse ArgumentParser with the variable name `parser`, you can feed it into `tuiview` and view the tui, dude :metal:
-
-For example, save the following to `echo.py`:
-
-```python
-import argparse
-
-parser = argparse.ArgumentParser(prog="echo")
-
-parser.add_argument("text", nargs="*")
-
-parser.add_argument(
-    "-n",
-    action="store_true",
-    help="do not output the trailing newline",
-)
-```
-
-> Hint: see this, and `ping.py` in the `examples/` folder
-
-Now display the TUI using: `tv from-file echo.py`
-
-## Support
-
-If you think this is as cool as I do and want to contribute and help curate files of argparse parsers for various CLI tools, rock on :metal:
-
-If this project delivers value to you, please [provide feedback](https://www.github.com/fresh2dev/tuiview/issues), code contributions, and/or [funding](https://www.f2dv.com/fund).
+---
 
 *Brought to you by...*
 

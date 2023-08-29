@@ -1,9 +1,10 @@
 # Changes here will be overwritten by Copier
-_commit: 2c22537
+_commit: 49ab3f6
 _src_path: https://codeberg.org/Fresh2dev/copier-f2dv-project.git
 author_email: hello@f2dv.com
 author_name: Donald Mellenbruch
 ci_domain_name: lokalhost.net
+docs_slides_url: https://www.f2dv.com/s/tuiview
 docs_url: https://www.f2dv.com/r/tuiview
 funding_url: https://www.f2dv.com/fund
 home_domain: f2dv.com
@@ -12,7 +13,7 @@ is_minimal: false
 is_python: true
 license_type: GPLv3
 package_name: tuiview
-project_description: A TUI for every CLI.
+project_description: A TUI for every CLI
 project_name: tuiview
 python_version: '3.8'
 repo_mirror: https://www.f2dv.com/r/tuiview

@@ -24,20 +24,22 @@ data:
     }
   volumes: >-
     []
+  initSteps: >-
+    []
   beforeSteps: >-
     [
       {
         "name": "py-test",
-        "image": "registry.lokalhost.net/fresh2dev/mykefiles:a43f1d5",
+        "image": "registry.lokalhost.net/fresh2dev/mykefiles:c18bafd",
         "environment": {
           "PIP_CONF": {"from_secret": "PIP_CONF"},
           "MYKE_MODULE": "mykefiles.python"
         },
         "commands": [
           "mkdir -p ~/.config/pip && echo \"$PIP_CONF\" > ~/.config/pip/pip.conf",
-          "myke py-install",
-          "myke py-reports",
-          "myke py-build"
+          "myke py install",
+          "myke py reports",
+          "myke py build"
         ],
         "when": {}
       }
@@ -48,7 +50,7 @@ data:
     [
       {
         "name": "py-build-package",
-        "image": "registry.lokalhost.net/fresh2dev/mykefiles:a43f1d5",
+        "image": "registry.lokalhost.net/fresh2dev/mykefiles:c18bafd",
         "environment": {
           "PYPI_CREDS": {"from_secret": "PYPI_CREDS"},
           "PIP_CONF": {"from_secret": "PIP_CONF"},
@@ -57,14 +59,14 @@ data:
         "commands": [
           "echo \"$PYPI_CREDS\" > ~/.pypirc",
           "mkdir -p ~/.config/pip && echo \"$PIP_CONF\" > ~/.config/pip/pip.conf",
-          "myke py-version-set --repository lokalhost",
-          "myke py-build"
+          "myke py version-set --repository lokalhost",
+          "myke py build"
         ],
         "when": {}
       },
       {
         "name": "py-publish-sandbox",
-        "image": "registry.lokalhost.net/fresh2dev/mykefiles:a43f1d5",
+        "image": "registry.lokalhost.net/fresh2dev/mykefiles:c18bafd",
         "environment": {
           "PYPI_CREDS": {"from_secret": "PYPI_CREDS"},
           "PIP_CONF": {"from_secret": "PIP_CONF"},
@@ -74,13 +76,13 @@ data:
         "commands": [
           "echo \"$PYPI_CREDS\" > ~/.pypirc",
           "mkdir -p ~/.config/pip && echo \"$PIP_CONF\" > ~/.config/pip/pip.conf",
-          "myke py-publish --repository lokalhost"
+          "myke py publish --repository lokalhost"
         ],
         "when": {}
       },
       {
         "name": "py-publish-dev",
-        "image": "registry.lokalhost.net/fresh2dev/mykefiles:a43f1d5",
+        "image": "registry.lokalhost.net/fresh2dev/mykefiles:c18bafd",
         "environment": {
           "PYPI_CREDS": {"from_secret": "PYPI_CREDS"},
           "PIP_CONF": {"from_secret": "PIP_CONF"},
@@ -90,7 +92,7 @@ data:
         "commands": [
           "echo \"$PYPI_CREDS\" > ~/.pypirc",
           "mkdir -p ~/.config/pip && echo \"$PIP_CONF\" > ~/.config/pip/pip.conf",
-          "myke py-publish --repository codeberg"
+          "myke py publish --repository codeberg"
         ],
         "when": {
           "ref": ["refs/heads/dev", "refs/heads/main", "refs/tags/*"]
@@ -98,7 +100,7 @@ data:
       },
       {
         "name": "py-publish-test",
-        "image": "registry.lokalhost.net/fresh2dev/mykefiles:a43f1d5",
+        "image": "registry.lokalhost.net/fresh2dev/mykefiles:c18bafd",
         "environment": {
           "PYPI_CREDS": {"from_secret": "PYPI_CREDS"},
           "PIP_CONF": {"from_secret": "PIP_CONF"},
@@ -108,7 +110,7 @@ data:
         "commands": [
           "echo \"$PYPI_CREDS\" > ~/.pypirc",
           "mkdir -p ~/.config/pip && echo \"$PIP_CONF\" > ~/.config/pip/pip.conf",
-          "myke py-publish --repository testpypi"
+          "myke py publish --repository testpypi"
         ],
         "when": {
           "ref": ["refs/tags/*"]
@@ -116,7 +118,7 @@ data:
       },
       {
         "name": "py-publish-prod",
-        "image": "registry.lokalhost.net/fresh2dev/mykefiles:a43f1d5",
+        "image": "registry.lokalhost.net/fresh2dev/mykefiles:c18bafd",
         "environment": {
           "PYPI_CREDS": {"from_secret": "PYPI_CREDS"},
           "PIP_CONF": {"from_secret": "PIP_CONF"},
@@ -126,7 +128,7 @@ data:
         "commands": [
           "echo \"$PYPI_CREDS\" > ~/.pypirc",
           "mkdir -p ~/.config/pip && echo \"$PIP_CONF\" > ~/.config/pip/pip.conf",
-          "myke py-publish --repository pypi"
+          "myke py publish --repository pypi"
         ],
         "when": {
           "ref": ["refs/tags/*"]

@@ -1,10 +1,10 @@
 import argparse
 
-parser = argparse.ArgumentParser(prog="ping")
-
-parser.add_argument("STRING")
-
-parser = argparse.ArgumentParser(prog="ping", description="Ping command")
+parser = argparse.ArgumentParser(
+    prog="ping",
+    description="Ping command",
+    add_help=False,
+)
 parser.add_argument("destination", help="dns name or ip address")
 parser.add_argument(
     "-i",
