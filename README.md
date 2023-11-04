@@ -1,33 +1,46 @@
-# TUIview [`tv`]
+<h1 align="center">TUIview [<code>tv</code>]</h1>
+<p align="center"><em>A TUI for every CLI</em> :tv:</p>
+<h2 align="center">
+<a href="https://www.f2dv.com/r/tuiview/" target="_blank">Documentation</a>
+| <a href="https://www.f2dv.com/s/tuiview/" target="_blank">Slide Deck</a>
+| <a href="https://www.github.com/fresh2dev/tuiview/" target="_blank">Git Repo</a>
+</h2>
 
-> A TUI for every CLI
+*TUIview* [`tv`] allows you to create Textual User Interfaces (TUIs) for command-line interfaces (CLIs) that do not provide their own TUI.
 
----
+By prefixing any supported CLI command with the `tv` command -- `tv <program>` -- you can interact with a TUI form to interactively build and execute CLI commands for *\<program>*.
 
-<iframe src="https://www.f2dv.com/s/tuiview" frameborder="0" scrolling="no" style="height: 400px; width: 100%; border: none;"></iframe>
+TUIview accepts spec from YAML files, or from Python files that implement an Argparse `ArgumentParser`.
 
-- <a href="https://www.f2dv.com/s/tuiview" target="_blank">*View the Slides*</a>
-- <a href="https://www.f2dv.com/r/tuiview" target="_blank">*Read the Docs*</a>
+TUIview is a tool for displaying these "programs", and also provides a built-in repository of curated programs.
+
+Care to contribute or improve a TV program? PRs welcome :call_me_hand:
+
+## Install
+
+```
+pipx install tuiview
+```
+
+or
+
+```
+pip install tuiview
+```
+
+## Use
+
+<a href="https://www.f2dv.com/s/tuiview/" target="_blank">
+    <img src="https://img.fresh2.dev/slides_placeholder.png"></img>
+</a>
 
 <video autoplay="false" controls="controls">
   <source src="https://img.fresh2.dev/tv_demo.webm" type="video/webm"/>
+  <p><i>This page does not support webm video playback.</i></p>
+  <p><i><a href="https://www.f2dv.com/r/tuiview/" target="_blank">Click here to watch a video demo.</a></i></p>
 </video>
 
----
-
-[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/fresh2dev/tuiview?filter=!*%5Ba-z%5D*&style=for-the-badge&label=Release&color=blue)](https://www.f2dv.com/r/tuiview/changelog)
-[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/fresh2dev/tuiview/main?style=for-the-badge&label=updated&color=blue)](https://www.f2dv.com/r/tuiview/changelog)
-[![GitHub Repo stars](https://img.shields.io/github/stars/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://star-history.com/#fresh2dev/tuiview&Date)
-[![License](https://img.shields.io/github/license/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/license)
-<!-- [![GitHub issues](https://img.shields.io/github/issues-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/issues) -->
-<!-- [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/pulls) -->
-<!-- [![PyPI - Downloads](https://img.shields.io/pypi/dm/tuiview?color=blue&style=for-the-badge)](https://pypi.org/project/tuiview) -->
-<!-- [![Docker Pulls](https://img.shields.io/docker/pulls/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://hub.docker.com/r/fresh2dev/tuiview) -->
-<!-- [![Funding](https://img.shields.io/badge/funding-%24%24%24-blue?style=for-the-badge)](https://www.f2dv.com/fund) -->
-
----
-
-Integrated CLI tools:
+## Programs
 
 > Legend:
 :green_circle: = Verified
@@ -101,14 +114,14 @@ Integrated CLI tools:
 - :white_circle: wget
 - :white_circle: zoxide
 
-TUIview is simply a program for running and managing these *TV Program* files; Python Argparse implementations of various CLI tools.
-
-The real work -- the real value -- is in the quantity *and* quality of the program files. If you want to help make TUIview better by contributing and correcting TV Programs, please send PRs!
-
-> Pro tip: Given a the help text output from your CLI app of choice, ChatGPT is decent at providing an Argparse implementation of it.
-
 ---
 
-*Brought to you by...*
-
-<a href="https://www.f2dv.com"><img src="https://img.fresh2.dev/fresh2dev.svg" style="filter: invert(50%);"></img></a>
+[![License](https://img.shields.io/github/license/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.f2dv.com/r/tuiview/license/)
+[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/fresh2dev/tuiview?filter=!*%5Ba-z%5D*&style=for-the-badge&label=Release&color=blue)](https://www.f2dv.com/r/tuiview/changelog/)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/fresh2dev/tuiview/main?style=for-the-badge&label=updated&color=blue)](https://www.f2dv.com/r/tuiview/changelog/)
+[![GitHub Repo stars](https://img.shields.io/github/stars/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://star-history.com/#fresh2dev/tuiview&Date)
+[![Funding](https://img.shields.io/badge/funding-%24%24%24-blue?style=for-the-badge)](https://www.f2dv.com/fund/)
+<!-- [![GitHub issues](https://img.shields.io/github/issues-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/issues/) -->
+<!-- [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://www.github.com/fresh2dev/tuiview/pulls/) -->
+<!-- [![PyPI - Downloads](https://img.shields.io/pypi/dm/tuiview?color=blue&style=for-the-badge)](https://pypi.org/project/tuiview/) -->
+<!-- [![Docker Pulls](https://img.shields.io/docker/pulls/fresh2dev/tuiview?color=blue&style=for-the-badge)](https://hub.docker.com/r/fresh2dev/tuiview/) -->
