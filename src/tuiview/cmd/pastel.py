@@ -140,7 +140,6 @@ def pastel_format(subparser):
             "cmyk",
             "name",
         ],
-        nargs="?",
         default="hex",
         help="Output format type.",
     )
@@ -150,14 +149,6 @@ def pastel_format(subparser):
         "color",
         nargs="+",
         help="Colors to convert to the specified format.",
-    )
-
-    # Define the optional arguments
-    subparser.add_argument(
-        "-n",
-        metavar="N",
-        type=int,
-        help="Number of colors to generate.",
     )
 
 
@@ -331,7 +322,7 @@ def pastel_desaturate(subparser):
     subparser.add_argument(
         "amount",
         type=float,
-        help="Amount of saturation to add (number between 0.0 and 1.0)",
+        help="Amount of saturation to subtract (number between 0.0 and 1.0)",
     )
     subparser.add_argument(
         "color",
@@ -367,7 +358,7 @@ def pastel_darken(subparser):
     subparser.add_argument(
         "amount",
         type=float,
-        help="Amount of saturation to add (number between 0.0 and 1.0)",
+        help="Amount of saturation to subtract (number between 0.0 and 1.0)",
     )
     subparser.add_argument(
         "color",

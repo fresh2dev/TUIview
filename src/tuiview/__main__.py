@@ -7,7 +7,7 @@ from importlib import import_module
 from pathlib import Path
 from shutil import copy, which
 from types import ModuleType
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import yapx
 from argparse_tui import invoke_tui
@@ -15,13 +15,16 @@ from yapx.types import Annotated
 
 from .__version__ import __version__
 
-TV_MODULES: Dict[str, ModuleType] = {}
+TV_MODULES: Dict[str, Union[Path, ModuleType]] = {}
 TV_MODULE_DIR: Path = (
     Path(os.environ["TV_MODULE_DIR"])
     if os.getenv("TV_MODULE_DIR", None)
     else Path.home() / ".tuiview"
 )
 TV_MODULE_DIR_INTERNAL: Path = Path(__file__).parent / "cmd"
+
+SUPPORTED_SPEC_FILE_EXTS: Tuple[str, ...] = (".yml", ".yaml", ".json")
+SUPPORTED_FILE_EXTS: Tuple[str, ...] = (".py", *SUPPORTED_SPEC_FILE_EXTS)
 
 
 @contextmanager
@@ -69,11 +72,23 @@ def get_parser_from_module(module: ModuleType) -> argparse.ArgumentParser:
     return parser
 
 
-def import_modules_from_package(name: Optional[str] = None) -> Dict[str, ModuleType]:
+def import_modules_from_package(
+    name: Optional[str] = None,
+) -> Dict[str, Union[Path, ModuleType]]:
+    supported_files: List[Path] = [
+        y
+        for x in SUPPORTED_FILE_EXTS
+        for y in TV_MODULE_DIR_INTERNAL.glob(f"*{x}")
+        if not y.name.startswith("_")
+    ]
+
     return {
-        prog_name: import_module(f".{x.parent.stem}.{x.stem}", package=__package__)
-        for x in sorted(TV_MODULE_DIR_INTERNAL.glob("*.py"))
-        if not x.name.startswith("_")
+        prog_name: (
+            x
+            if x.suffix in SUPPORTED_SPEC_FILE_EXTS
+            else import_module(f".{x.parent.stem}.{x.stem}", package=__package__)
+        )
+        for x in sorted(supported_files)
         for prog_name in [to_prog_name(x.stem)]
         if name is None or prog_name == name
     }
@@ -87,25 +102,31 @@ def import_module_from_file(path: Path) -> ModuleType:
 def import_modules_from_path(
     path: Path,
     name: Optional[str] = None,
-) -> Dict[str, ModuleType]:
+) -> Dict[str, Union[Path, ModuleType]]:
+    supported_files: List[Path] = [
+        y
+        for x in SUPPORTED_FILE_EXTS
+        for y in path.glob(f"*{x}")
+        if not y.name.startswith("_")
+    ]
+
     return {
-        prog_name: import_module_from_file(x)
-        for x in sorted(path.glob("*.py"))
+        prog_name: (
+            x if x.suffix in SUPPORTED_SPEC_FILE_EXTS else import_module_from_file(x)
+        )
+        for x in sorted(supported_files)
         for prog_name in [to_prog_name(x.stem)]
         if name is None or prog_name == name
     }
 
 
-def invoke_tui_from_module(module: ModuleType, *args: str):
-    parser = get_parser_from_module(module)
-    invoke_tui(parser, cli_args=args)
-
-
 def invoke_tui_from_file(path: Union[str, Path], *args: str):
-    if isinstance(path, str):
-        path = Path(path)
-    module = import_module_from_file(Path(sys.argv[1]))
-    parser = get_parser_from_module(module)
+    path = Path(path)
+    if path.suffix.lower() in SUPPORTED_SPEC_FILE_EXTS:
+        parser = yapx.build_parser_from_file(path)
+    else:
+        module = import_module_from_file(path)
+        parser = get_parser_from_module(module)
     invoke_tui(parser, cli_args=args)
 
 
@@ -113,8 +134,12 @@ def to_prog_name(text: str) -> str:
     return text.split(".")[-1].strip(" _").replace("_", "-").replace(" ", "-")
 
 
-def is_builtin_module(module: ModuleType) -> bool:
-    return module.__name__.split(".", 1)[0] == __package__
+def is_builtin_module(module: Union[Path, ModuleType]) -> bool:
+    return (
+        str(module).startswith(str(Path(__file__).parent))
+        if isinstance(module, Path)
+        else module.__name__.split(".", 1)[0] == __package__
+    )
 
 
 def is_prog_available(name: str) -> bool:
@@ -163,7 +188,11 @@ class EditProgramAction(argparse.Action):
         prog_path: Path = TV_MODULE_DIR
 
         prog_name: Optional[str] = values
-        module: Union[None, ModuleType, List[ModuleType]] = None
+        module: Union[
+            None,
+            Union[Path, ModuleType],
+            List[Union[Path, ModuleType]],
+        ] = None
 
         if prog_name:
             module = [
@@ -177,15 +206,13 @@ class EditProgramAction(argparse.Action):
             assert isinstance(module, list)
             module = module[0]
 
-            if not module.__file__:
-                err: str = f"No file found for module: {module.__name__}"
-                raise ValueError(err)
-
             if is_builtin_module(module):
-                prog_path = import_program(
-                    Path(module.__file__),
-                    force=False,
-                )
+                if isinstance(module, Path):
+                    prog_path = import_program(module, force=False)
+                else:
+                    prog_path = import_program(Path(module.__file__), force=False)
+            elif isinstance(module, Path):
+                prog_path = module
             else:
                 prog_path = Path(module.__file__)
 
@@ -269,7 +296,7 @@ def main() -> None:
         sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else None
     )
 
-    if first_arg and first_arg.endswith(".py"):
+    if first_arg and first_arg.lower().endswith(SUPPORTED_FILE_EXTS):
         try:
             path: Path = Path(first_arg)
             extra_args: List[str] = sys.argv[2:]
@@ -301,11 +328,11 @@ def main() -> None:
 
     subcommands: List[yapx.Command] = []
     for prog_name, module in TV_MODULES.items():
-
-        def _invoke_tui_from_this_module(*args: str, _module=module):
-            invoke_tui_from_module(_module, *args)
-
-        _this_parser: argparse.ArgumentParser = get_parser_from_module(module)
+        _this_parser: argparse.ArgumentParser = (
+            yapx.build_parser_from_file(module)
+            if isinstance(module, Path)
+            else get_parser_from_module(module)
+        )
 
         argparse_default_prog: str = Path(sys.argv[0]).stem
         if not _this_parser.prog or _this_parser.prog == argparse_default_prog:
@@ -314,16 +341,19 @@ def main() -> None:
             err: str = f"The base name of the file should be equal to the name of the program: {prog_name} != {_this_parser.prog}"
             raise ValueError(err)
         elif is_prog_available(prog_name):
+
+            def _invoke_tui_from_this_parser(*args: str, _parser=_this_parser):
+                invoke_tui(_parser, cli_args=args)
+
             cmd_help: Optional[str] = (
                 _this_parser.description if _this_parser.description else module.__doc__
             )
-
             if cmd_help:
-                _invoke_tui_from_this_module.__doc__ = cmd_help
+                _invoke_tui_from_this_parser.__doc__ = cmd_help
 
             subcommands.append(
                 yapx.cmd(
-                    _invoke_tui_from_this_module,
+                    _invoke_tui_from_this_parser,
                     name=_this_parser.prog,
                     add_help=False,
                 ),

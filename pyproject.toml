@@ -17,7 +17,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "typing-extensions; python_version<'3.10'",
-    "yapx[extras]>=0.4.1,<1",
+    "yapx[extras]>=0.4.2,<1",
 ]
 
 [project.optional-dependencies]
@@ -28,10 +28,9 @@ build = [
 ]
 dev = [
     "python-lsp-server[rope]==1.*",
-    "pylint==2.*",
-    "pylint-pytest==1.*",
+    "pylint==3.*",
     "mypy[reports]==1.*",
-    "ruff==0.*",
+    "ruff==0.1.*",
     "black[jupyter]==23.*",
     "isort==5.*",
     "bump2version==1.*",
@@ -45,7 +44,7 @@ docs = [
     "mkdocs==1.*",
     "mkdocs-material==9.*",
     "mkdocs-jupyter==0.24.*",
-    "mkdocstrings[python]==0.20.*",
+    "mkdocstrings[python]==0.23.*",
     "mkdocs-autorefs==0.*",
     "mkdocs-include-dir-to-nav==1.*",
 ]
@@ -55,8 +54,7 @@ tests = [
     "pytest-html==3.*",
     "pytest-sugar==0.*",
     "pytest-custom-exit-code==0.3.*",
-    "pylint==2.*",
-    "pylint-pytest==1.*",
+    "pylint==3.*",
     "packaging==23.*",
     "mockish>=0.1.1,<2",
 ]
@@ -85,20 +83,22 @@ version = {attr = "tuiview.__version__.__version__"}
 minversion = 7.0
 testpaths = ["tests"]
 
-[tool.pylint.MASTER]
+[tool.pylint.main]
 ignore-paths = "^(?!src|tests).*$"
-load-plugins = ["pylint_pytest"]
 extension-pkg-whitelist = ["pydantic"]
 [tool.pylint.messages_control]
 max-line-length = 88
 disable = [
     "fixme",
     "invalid-name",
+    "line-too-long",
     "unnecessary-pass",
     "unnecessary-ellipsis",
     "too-few-public-methods",
     "import-outside-toplevel",
+    "missing-class-docstring",
     "missing-module-docstring",
+    "missing-function-docstring",
 ]
 
 [tool.mypy]

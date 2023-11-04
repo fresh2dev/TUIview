@@ -1,0 +1,12 @@
+'echo':
+  description: "Print text"
+  add_help: false
+  arguments:
+    'STRING':
+      pos: true
+      nargs: '*'
+    'n':
+      flags: ['-n']
+      action: 'store_true'
+      help: "do not output the trailing newline"
+
