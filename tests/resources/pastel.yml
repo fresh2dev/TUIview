@@ -1,0 +1,310 @@
+# .parser_ref:
+#   description: "..."
+#   add_help: true
+#   arguments: {}
+#   subparsers: {}
+#
+# .argument_ref:
+#   flags: []
+#   pos: false
+#   required: false
+#   default: null
+#   nargs: 1
+#   type: str
+#   choices: []
+#   help: ""
+#   metavar: ""
+#   action: ""
+#   group: ""
+#   exclusive: false
+#   const: null
+
+'pastel':
+  description: "A command-line tool to generate, analyze, convert and manipulate colors"
+  add_help: false
+  arguments: {}
+  subcommands:
+    'color':
+      description: "Show and display some information about the given color(s)"
+      arguments:
+        'color': &pos-color-arg
+          pos: true
+          nargs: '+'
+          help: "Colors can be specified in many different formats, such as #RRGGBB, RRGGBB, #RGB, 'rgb(…, …, …)', 'hsl(…, …, …)', 'gray(…)' or simply by the name of the color."
+      subcommands: {}
+    'list':
+      description: "Show a list of available color names"
+      arguments:
+        'sort':
+          flags: ['-s', '--sort']
+          default: 'hue'
+          choices: ["brightness", "luminance", "hue", "chroma", "random"]
+          help: "Sort order"
+      subcommands: {}
+    'random':
+      description: "Generate a list of random colors"
+      arguments:
+        'strategy':
+          flags: ["-s", "--strategy"]
+          default: 'vivid'
+          choices: ["vivid", "rgb", "gray", "lch_hue"]
+          help: "Randomization strategy"
+        'color_count':
+          flags: ['-n', '--number']
+          type: int
+          default: 10
+          help: "Number of colors to generate"
+      subcommands: {}
+    'distinct':
+      description: "Generate a set of visually distinct colors by maximizing the perceived color difference between pairs of colors"
+      arguments:
+        'count':
+          pos: true
+          type: int
+          default: 10
+          help: "Number of distinct colors in the set"
+        'color':
+          <<: *pos-color-arg
+        'metric':
+          flags: ['-m', '--metric']
+          default: "CIE76"
+          choices: ["CIEDE2000", "CIE76"]
+          help: "Distance metric to compute mutual color distances"
+        'verbose':
+          flags: ['-v', '--verbose']
+          type: bool
+          action: 'store_true'
+          help: "Print simulation output to STDERR"
+      subcommands: {}
+    'sort_by':
+      description: "Sort a list of colors by the given property."
+      arguments:
+        'sort_order':
+          pos: true
+          choices: ["brightness", "luminance", "hue", "chroma", "random"]
+          default: "hue"
+          help: "Sort order [default: hue]"
+        'color':
+          <<: *pos-color-arg
+        'reverse':
+          flags: ['-r', '--reverse']
+          action: 'store_true'
+          help: "Reverse the sort order"
+        'unique':
+          flags: ["-u", "--unique"]
+          action: "store_true"
+          help: "Remove duplicate colors"
+      subcommands: {}
+    'format':
+      description: "Convert the given color(s) to a specific format."
+      arguments:
+        "type":
+          pos: true
+          default: "hex"
+          help: "Output format type."
+          choices:
+          - "rgb"
+          - "rgb-float"
+          - "hex"
+          - "hsl"
+          - "hsl-hue"
+          - "hsl-saturation"
+          - "hsl-lightness"
+          - "lch"
+          - "lch-lightness"
+          - "lch-chroma"
+          - "lch-hue"
+          - "lab"
+          - "lab-a"
+          - "lab-b"
+          - "luminance"
+          - "brightness"
+          - "ansi-8bit"
+          - "ansi-24bit"
+          - "ansi-8bit-escapecode"
+          - "ansi-24bit-escapecode"
+          - "cmyk"
+          - "name"
+        'color':
+          pos: true
+          nargs: "+"
+          help: "Colors to convert to the specified format."
+      subcommands: {}
+    'paint':
+      description: "Print colored text using ANSI escape sequences"
+      arguments:
+        'color':
+          pos: true
+          help: "The foreground color."
+        'text':
+          pos: true
+          nargs: "+"
+          help: "The text to be printed in color."
+        'on':
+          flags: ["-o", "--on"]
+          required: false
+          metavar: "bg-color"
+          help: "Use the specified background color"
+        'bold':
+          flags: ["-b", "--bold"]
+          action: "store_true"
+          help: "Print the text in bold face"
+        'italic':
+          flags: ["-i", "--italic"]
+          action: "store_true"
+          help: "Print the text in italic font"
+        'underline':
+          flags: ["-u", "--underline"]
+          action: "store_true"
+          help: "Draw a line below the text"
+        'no_newline':
+          flags: ["-n", "--no-newline"]
+          action: "store_true"
+          help: "Do not print a trailing newline character"
+      subcommands: {}
+    'gradient':
+      description: "Generate a sequence of colors that interpolates between the specified colors."
+      arguments:
+        'color':
+          pos: true
+          nargs: '+'
+          help: "Color stops in the color gradient"
+        'number':
+          flags: ["-n", "--number"]
+          type: int
+          default: 10
+          help: "Number of colors to generate [default: 10]"
+        'colorspace':
+          flags: ["-s", "--colorspace"]
+          choices: ["Lab", "LCh", "RGB", "HSL"]
+          default: "Lab"
+          help: "The colorspace in which to interpolate [default: Lab]"
+      subcommands: {}
+    'mix':
+      description: "Create new colors by interpolating between two colors in the given colorspace"
+      arguments:
+        'color':
+          pos: true
+        'other_colors':
+          <<: *pos-color-arg
+        'colorspace':
+          flags: ["-s", "--colorspace"]
+          choices: ["Lab", "LCh", "RGB", "HSL"]
+          default: "Lab"
+          help: "The colorspace in which to interpolate"
+        'fraction':
+          flags: ["-f", "--fraction"]
+          type: float
+          default: 0.5
+          help: "The number between 0.0 and 1.0 determining how much to mix in from the base color"
+      subcommands: {}
+    'colorblind':
+      description: "Convert the given color to how it would look to a person with protanopia, deuteranopia, or tritanopia"
+      arguments:
+        'type':
+          pos: true
+          choices: ["prot", "deuter", "trit"]
+          help: "The type of colorblindness that should be simulated (protanopia, deuteranopia, tritanopia)"
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'set':
+      description: "Set the given property to a specific value"
+      arguments:
+        "property":
+          pos: true
+          choices:
+          - "lightness"
+          - "hue"
+          - "chroma"
+          - "lab-a"
+          - "lab-b"
+          - "red"
+          - "green"
+          - "blue"
+          - "hsl-hue"
+          - "hsl-saturation"
+          - "hsl-lightness"
+          help: "The property that should be changed"
+        'value':
+          pos: true
+          help: "The new numerical value of the property"
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'saturate':
+      description: "Increase the saturation of a color by adding a certain amount to the HSL saturation channel."
+      arguments:
+        'amount':
+          pos: true
+          type: float
+          help: "Amount of saturation to add (number between 0.0 and 1.0)"
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'desaturate':
+      description: "Decrease the saturation of a color by subtracting a certain amount from the HSL saturation channel."
+      arguments:
+        'amount':
+          pos: true
+          type: float
+          help: "Amount of saturation to subtract (number between 0.0 and 1.0)"
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'lighten':
+      description: "Lighten a color by adding a certain amount to the HSL lightness channel."
+      arguments:
+        'amount':
+          pos: true
+          type: float
+          help: "Amount of saturation to add (number between 0.0 and 1.0)"
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'darken':
+      description: "Darken a color by subtracting a certain amount from the lightness channel."
+      arguments:
+        'amount':
+          pos: true
+          type: float
+          help: "Amount of saturation to add (number between 0.0 and 1.0)"
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'rotate':
+      description: "Rotate the HSL hue channel of a color by the specified angle (in degrees). A rotation by 180° returns the complementary color. A rotation by 360° returns to the original color."
+      arguments:
+        "degrees":
+          pos: true
+          type: float
+          help: "angle by which to rotate (in degrees, can be negative)"
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'complement':
+      description: "Compute the complementary color by rotating the HSL hue channel by 180°."
+      arguments:
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'gray':
+      description: "Create a gray tone from a given lightness value."
+      arguments:
+        "lightness":
+          pos: true
+          type: float
+          help: "Lightness of the created gray tone (number between 0.0 and 1.0)"
+      subcommands: {}
+    'to_gray':
+      description: "Completely desaturate the given color while preserving the luminance."
+      arguments:
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
+    'textcolor':
+      description: "Return a readable foreground text color (either black or white) for a given background color. This can also be used in the opposite way, i.e. to create a background color for a given text color."
+      arguments:
+        'color':
+          <<: *pos-color-arg
+      subcommands: {}
